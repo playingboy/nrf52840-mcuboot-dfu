@@ -1,0 +1,58 @@
+/ {
+    aliases {
+        /* Link the physical button to MCUboot */
+        mcuboot-button0 = &button0;
+    };
+
+    chosen {
+        /* Direct MCUboot's serial recovery interface to use the virtual USB port */
+        zephyr,uart-mcumgr = &cdc_acm_uart0;
+    };
+};
+
+/* Bind the physical button pin (Button 1 on nRF52840DK) */
+&button0 {
+    gpios = <&gpio0 06 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+};
+
+&zephyr_udc0 {
+    cdc_acm_uart0: cdc_acm_uart0 {
+        compatible = "zephyr,cdc-acm-uart";
+    };
+};
+
+/ {
+    aliases {
+        /* 
+         * 核心：将系统默认寻找的 LED 别名，重定向到你自己定义的节点上。
+         * MCUboot 串口恢复模式默认寻找 "boot-led0"
+         * 普通应用示例通常寻找 "led0"
+         */
+        boot-led0 = &led0;
+        mcuboot-led0 = &led0;
+    };
+    leds {
+                compatible = "gpio-leds";
+
+                led0: led_0 {
+                        gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
+                        label = "Green LED 0";
+                };
+
+                led1: led_1 {
+                        gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
+                        label = "Green LED 1";
+                };
+
+                led2: led_2 {
+                        gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
+                        label = "Green LED 2";
+                };
+
+                led3: led_3 {
+                        gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
+                        label = "Green LED 3";
+                };
+        };
+
+};
